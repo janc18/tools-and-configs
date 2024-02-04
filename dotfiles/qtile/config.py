@@ -86,6 +86,7 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawn("rofi -show drun"), desc="Spawn a command using a prompt widget"),
+    Key([mod,"shift"], "r", lazy.spawn("rofi -modi emoji -show emoji"), desc="Spawn a command using a prompt widget"),
 ]
 
 #Add key bindings to switch VTs in Wayland.
@@ -101,8 +102,49 @@ for vt in range(1, 8):
             )
     )
 
+colors = [
+    ["#97D59B", "#141417"],  # ACTIVE WORKSPACES 0
+    ["#6A6A6A", "#6A6A6A"],  # INACTIVE WORKSPACES 1
+    ["#384149", "#384149"],  # background lighter 2
+    ["#FF8080", "#FF8080"],  # red 3
+    ["#97D59B", "#97D59B"],  # green 4
+    ["#FFFE80", "#FFFE80"],  # yellow 5
+    ["#80D1FF", "#80D1FF"],  # blue 6
+    ["#C780FF", "#C780FF"],  # magenta 7
+    ["#80FFE4", "#80FFE4"],  # cyan 8
+    ["#D5D5D5", "#D5D5D5"],  # white 9
+    ["#4c566a", "#4c566a"],  # grey 10
+    ["#d08770", "#d08770"],  # orange 11
+    ["#8fbcbb", "#8fbcbb"],  # super cyan12
+    ["#181E23", "#0E131A"],  # super blue 13
+    ["#181e23", "#181e23"],  # super dark background 14
+]
 
-groups = [Group(i) for i in "123456789"]
+groups = []
+
+group_names = ["1", "2", "3", "4", "5", "6",]
+group_labels = ["Web ", "Term ", "Files ", "Code ", "Image ", "Video ",]
+group_layouts = ["monadtall", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall",]
+
+for i in range(len(group_names)):
+    groups.append(
+        Group(
+            name=group_names[i],
+            layout=group_layouts[i].lower(),
+            label=group_labels[i],
+        )
+    )
+# for i in groups:
+#     keys.extend([
+#         Key([mod], i.name, lazy.group[i.name].toscreen()),
+#         Key([mod], "Tab", lazy.screen.next_group()),
+#         Key([mod, "shift"], "Tab", lazy.screen.prev_group()),
+#         Key(["mod1"], "Tab", lazy.screen.next_group()),
+#         Key(["mod1", "shift"], "Tab", lazy.screen.prev_group()),
+#         Key([mod, "shift"], i.name, lazy.window.togroup(i.name), lazy.group[i.name].toscreen()),
+#     ])
+
+       
 for i in groups:
     keys.extend(
         [
@@ -144,10 +186,12 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="sans",
-    fontsize=12,
-    padding=3,
+    font="Fira Code Bold Nerd Font Complete Mono",
+    fontsize=15,
+    backgrounds=colors[14],
 )
+
+
 extension_defaults = widget_defaults.copy()
 
 screens = [
@@ -156,9 +200,32 @@ screens = [
         wallpaper_mode='fill',
         top=bar.Bar(
             [
-                widget.CurrentLayout(),
-                widget.GroupBox(),
+                widget.GroupBox(
+                    font="Fira Code Bold Nerd Font Complete Mono",
+                    fontsize = 15,
+                    margin_y = 5,
+                    margin_x = 5,
+                    padding_y = 10,
+                    padding_x = 10,
+                    borderwidth = 10,
+                    disable_drag = True,
+                    active = colors[3],
+                    inactive = colors[1],
+                    rounded = True,
+                    highlight_method = "block",
+                    highlight_color = colors[1],
+                    this_screen_border = colors[1],
+                    this_current_screen_border = colors[2],
+                    foreground = colors[1],
+                    background = colors[14]
+                        ),
                 widget.Prompt(),
+                widget.Sep(
+                        linewidth = 1,
+                        padding = 10,
+                        foreground = colors[14],
+                        background = colors[14]
+                        ),
                 widget.WindowName(),
                 widget.Net(),
                 widget.Chord(
@@ -186,11 +253,34 @@ screens = [
         wallpaper_mode='fill',
         top=bar.Bar(
             widgets=[
-                widget.CurrentLayout(),
-                widget.GroupBox(),
+                widget.GroupBox(
+                    font="Fira Code Bold Nerd Font Complete Mono",
+                    fontsize = 15,
+                    margin_y = 2,
+                    margin_x = 2,
+                    padding_y = 5,
+                    padding_x = 5,
+                    borderwidth = 10,
+                    disable_drag = True,
+                    active = colors[3],
+                    inactive = colors[1],
+                    rounded = True,
+                    highlight_method = "block",
+                    highlight_color = colors[1],
+                    this_screen_border = colors[1],
+                    this_current_screen_border = colors[2],
+                    foreground = colors[1],
+                    background = colors[14]
+                        ),
                 widget.Prompt(),
+                widget.Sep(
+                        linewidth = 1,
+                        padding = 10,
+                        foreground = colors[14],
+                        background = colors[14]
+                        ),
                 widget.WindowName(),
-                widget.TextBox("Monitor 2"),
+                widget.TextBox("<<>>"),
                 widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
                 ],
             size=20,
